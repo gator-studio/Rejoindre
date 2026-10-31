@@ -19,14 +19,18 @@
 
 ## Comment ça marche
 
-**1. Demande l'accès**
+### 1. Demande l'accès
+
 Clique sur le bouton ci-dessus, choisis le projet et laisse-moi un petit mot si tu veux. Puis **Submit new issue**.
+
 <sub>Il faut être connecté à GitHub : pas de compte ? Il est gratuit et se crée en une minute sur [github.com/signup](https://github.com/signup).</sub>
 
-**2. Reçois l'invitation**
+### 2. Reçois l'invitation
+
 Quand j'accepte, une invitation arrive dans tes mails. Clique sur **Accept invitation**.
 
-**3. Installe**
+### 3. Installe
+
 Tu as maintenant accès au projet : suis son guide d'installation, il tient en quelques étapes.
 
 ---
