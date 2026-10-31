@@ -4,12 +4,33 @@
 name: Accepter ou refuser une demande
 on:
   issues:
-    types: [labeled]
+    types: [opened, labeled]
 permissions:
   issues: write
 jobs:
+  titre:
+    # Une demande arrive : son titre devient « @pseudo · projet · « message » », pour tout lire depuis la liste des demandes.
+    # Le texte de la demande est lu dans l'événement par le script (jamais recopié dans une commande) : rien de ce qu'écrit
+    # le demandeur n'est exécuté.
+    if: github.event.action == 'opened'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const corps = context.payload.issue.body || '';
+            const champ = (titre) => {
+              const m = corps.split(/^###\s+/m).find(b => b.startsWith(titre));
+              const v = m ? m.slice(titre.length).trim() : '';
+              return v === '_No response_' ? '' : v;
+            };
+            const projet = champ('Quel projet ?') || '?';
+            let mot = champ('Un petit mot (facultatif)').replace(/\s+/g, ' ');
+            if (mot.length > 80) mot = mot.slice(0, 79) + '…';
+            const titre = `@${context.payload.issue.user.login} · ${projet}` + (mot ? ` · « ${mot} »` : ' · (pas de message)');
+            await github.rest.issues.update({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.payload.issue.number, title: titre });
   inviter:
-    if: github.event.label.name == 'accepté'
+    if: github.event.action == 'labeled' && github.event.label.name == 'accepté'
     runs-on: ubuntu-latest
     steps:
       - name: Vérifier que c'est un administrateur qui accepte
@@ -38,7 +59,7 @@ jobs:
               body: `C'est accepté @${qui} ! Une invitation t'attend dans tes mails, ou ici : https://github.com/${context.repo.owner}/${depot}/invitations — clique sur « Accept invitation », puis suis le README du projet.` });
             await github.rest.issues.update({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.payload.issue.number, state: 'closed' });
   refuser:
-    if: github.event.label.name == 'refusé'
+    if: github.event.action == 'labeled' && github.event.label.name == 'refusé'
     runs-on: ubuntu-latest
     steps:
       - name: Répondre et fermer
