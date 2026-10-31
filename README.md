@@ -1,6 +1,8 @@
 # Les projets de GATØR
 
-Tu veux essayer un de mes projets ? Demande l'accès ici : je reçois ta demande et je te réponds.
+Des outils de DJ faits maison pour préparer sa bibliothèque musicale avant de mixer : volume calé d'un morceau à l'autre,
+classement par genre, bibliothèques prêtes à importer dans Rekordbox. Ce sont des projets personnels, **privés**, partagés
+entre amis sur demande, chacun les utilisant avec ses propres comptes et abonnements.
 
 ### 👉 [Demander l'accès](../../issues/new?template=demande.yml)
 
@@ -8,4 +10,4 @@ Tu veux essayer un de mes projets ? Demande l'accès ici : je reçois ta demande
 2. Clique sur **Demander l'accès** ci-dessus, choisis le projet, puis **Submit new issue**.
 3. Quand j'accepte, tu reçois une invitation par mail : clique sur **Accept invitation**.
 
-Une question ? Écris-moi sur Instagram : [@gator_dj](https://www.instagram.com/gator_dj).
+Une question, une idée ? Écris-moi sur Instagram : [@gator_dj](https://www.instagram.com/gator_dj).
