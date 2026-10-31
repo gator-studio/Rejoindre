@@ -41,9 +41,6 @@ jobs:
               `<br clear="left">`,
               ``,
               message ? message.split('\n').map(l => `> ${l}`).join('\n') : `> _Pas de message._`,
-              ``,
-              `---`,
-              `**Pour décider** : à droite, *Labels* → \`accepté\` (il est invité tout de suite) ou \`refusé\` (il reçoit un mot poli).`,
             ].join('\n');
             await github.rest.issues.update({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.payload.issue.number,
                                               title: titre, body: fiche });
