@@ -1,0 +1,35 @@
+# Quand GATØR ajoute l'étiquette « accepté » à une demande : la personne qui l'a ouverte est invitée en lecture sur le projet
+# demandé, on lui répond et la demande est fermée. Seul un administrateur du dépôt peut déclencher l'invitation (vérifié ci-dessous,
+# en plus de GitHub qui réserve les étiquettes aux responsables). Rien d'autre ne se déclenche : pas de code de la demande exécuté.
+name: Accepter une demande
+on:
+  issues:
+    types: [labeled]
+permissions:
+  issues: write
+jobs:
+  inviter:
+    if: github.event.label.name == 'accepté'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inviter la personne
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.INVITER }}
+          script: |
+            const qui = context.payload.sender.login;
+            const droit = await github.rest.repos.getCollaboratorPermissionLevel({ owner: context.repo.owner, repo: context.repo.repo, username: qui });
+            if (droit.data.permission !== 'admin') { core.setFailed(`${qui} n'est pas administrateur : pas d'invitation.`); return; }
+            const projets = { 'Tridownload (bêta)': 'Tridownload_beta', 'Tridownload': 'Tridownload' };
+            const choix = Object.keys(projets).sort((a, b) => b.length - a.length).find(p => (context.payload.issue.body || '').includes(p)) || 'Tridownload (bêta)';
+            await github.rest.repos.addCollaborator({ owner: context.repo.owner, repo: projets[choix], username: context.payload.issue.user.login, permission: 'pull' });
+            core.exportVariable('PROJET', projets[choix]);
+      - name: Répondre et fermer
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const qui = context.payload.issue.user.login;
+            const depot = process.env.PROJET;
+            await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.payload.issue.number,
+              body: `C'est accepté @${qui} ! Une invitation t'attend dans tes mails, ou ici : https://github.com/${context.repo.owner}/${depot}/invitations — clique sur « Accept invitation », puis suis le README du projet.` });
+            await github.rest.issues.update({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.payload.issue.number, state: 'closed' });

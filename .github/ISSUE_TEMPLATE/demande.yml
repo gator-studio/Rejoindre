@@ -1,0 +1,18 @@
+name: Demander l'accès
+description: Demander l'accès à un projet de GATØR
+title: "Demande d'accès"
+labels: ["demande"]
+body:
+  - type: dropdown
+    id: projet
+    attributes:
+      label: Quel projet ?
+      options:
+        - Tridownload (bêta)
+    validations:
+      required: true
+  - type: textarea
+    id: mot
+    attributes:
+      label: Un petit mot (facultatif)
+      description: Qui tu es, comment tu as connu le projet, ton Instagram…
